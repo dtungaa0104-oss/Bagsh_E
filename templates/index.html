@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>БагшAI — Хичээлийн Хөтөлбөр Боловсруулагч</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mongolian&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="brand-text">Багш<span class="brand-ai">AI</span></span>
+            <span class="brand-sub">ЕБС-ийн хичээлийн хөтөлбөр</span>
+        </div>
+        <div class="nav-meta">
+            <span class="meta-badge">🇲🇳 Монгол хэл</span>
+            <span class="meta-badge">1–12-р анги</span>
+            <span class="meta-badge">A4 хэвлэх</span>
+        </div>
+    </nav>
+
+    <main class="main-layout">
+        <!-- LEFT PANEL: Input Form -->
+        <aside class="input-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span class="icon">📋</span>
+                    Хичээлийн мэдээлэл
+                </div>
+            </div>
+
+            <div class="form-body">
+                <div class="form-section">
+                    <label class="form-label">СУРГАЛТЫН МЕНЕЖЕРИЙН НЭР</label>
+                    <input type="text" id="managerName" class="form-input" placeholder="Жишээ нь: Б.Болормаа">
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label">БАГШИЙН НЭР</label>
+                    <input type="text" id="teacherName" class="form-input" placeholder="Жишээ нь: Д.Оюунцэцэг">
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label">АНГИ</label>
+                    <select id="gradeSelect" class="form-select" onchange="loadSubjects()">
+                        <option value="">— Сонгох —</option>
+                        {% for grade_num, grade_data in grades.items() %}
+                        <option value="{{ grade_num }}">{{ grade_data.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label">ХИЧЭЭЛИЙН НЭР</label>
+                    <select id="subjectSelect" class="form-select" onchange="loadTopics()" disabled>
+                        <option value="">— Эхлээд анги сонгоно уу —</option>
+                    </select>
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label">ХИЧЭЭЛИЙН СЭДЭВ</label>
+                    <select id="topicSelect" class="form-select" disabled>
+                        <option value="">— Эхлээд хичээл сонгоно уу —</option>
+                    </select>
+                    <input type="text" id="topicCustom" class="form-input mt-8" placeholder="Эсвэл өөрийн сэдэв бичнэ үү...">
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label">ХУГАЦАА</label>
+                    <select id="periodSelect" class="form-select">
+                        {% for period in periods %}
+                        <option value="{{ period.value }}" {% if period.value == '40' %}selected{% endif %}>{{ period.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label">СУРАЛЦАХУЙН ЗОРИЛТ (нэмэлт)</label>
+                    <textarea id="objectives" class="form-textarea" rows="4" placeholder="Сурагч энэ хичээлийн дараа юуг мэдэж, хийж чадах болох..."></textarea>
+                </div>
+
+                <button class="generate-btn" onclick="generatePlan()">
+                    <span class="btn-icon">✦</span>
+                    AI-аар хөтөлбөр үүсгэх
+                </button>
+            </div>
+        </aside>
+
+        <!-- RIGHT PANEL: Output -->
+        <section class="output-panel" id="outputPanel">
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">📄</div>
+                <h3 class="empty-title">Хөтөлбөр үүсгэхэд бэлэн</h3>
+                <p class="empty-desc">Зүүн талын маягтыг бөглөөд товч дарна уу. Монгол хэл, A4 хэвлэхэд бэлэн хөтөлбөр хэдэн секундэд гарна.</p>
+            </div>
+
+            <div class="loading-state hidden" id="loadingState">
+                <div class="loader-ring"></div>
+                <p>AI хөтөлбөр боловсруулж байна...</p>
+            </div>
+
+            <div class="plan-output hidden" id="planOutput">
+                <div class="plan-actions">
+                    <button class="action-btn" onclick="printPlan()">🖨️ Хэвлэх</button>
+                    <button class="action-btn" onclick="copyPlan()">📋 Хуулах</button>
+                    <button class="action-btn secondary" onclick="resetOutput()">🔄 Шинэчлэх</button>
+                </div>
+                <div id="planContent"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
