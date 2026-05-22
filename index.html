@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="mn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>БагшAI — Хичээлийн Хөтөлбөр Боловсруулагч</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>БагшAI — Хичээлийн Хөтөлбөр Боловсруулагч</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
 :root {
   --bg-primary: #f4f6fb;
   --bg-secondary: #ffffff;
-  --bg-card: #ffffff;
-  --bg-input: #f8f9fc;
   --border: #e2e7f0;
   --border-focus: #4f6ef7;
   --text-primary: #1a2035;
@@ -19,802 +17,620 @@
   --text-muted: #8a96b0;
   --accent: #4f6ef7;
   --accent-hover: #3a5ce0;
-  --accent-glow: rgba(79, 110, 247, 0.15);
-  --panel-width: 330px;
+  --accent-glow: rgba(79,110,247,0.15);
+  --panel-width: 340px;
   --nav-height: 56px;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; font-family: 'IBM Plex Sans', sans-serif; background: var(--bg-primary); color: var(--text-primary); font-size: 14px; line-height: 1.6; overflow: hidden; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:var(--bg-primary);color:var(--text-primary);font-size:14px;line-height:1.6;overflow:hidden;}
 
-.navbar { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-height); background: #ffffff; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-.brand-text { font-size: 20px; font-weight: 700; color: var(--text-primary); }
-.brand-ai { color: var(--accent); }
-.brand-sub { font-size: 11px; color: var(--text-muted); margin-left: 12px; }
-.nav-meta { display: flex; gap: 8px; }
-.meta-badge { font-size: 11px; padding: 3px 10px; border-radius: 100px; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-primary); }
+/* NAV */
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.brand-text{font-size:20px;font-weight:700;color:var(--text-primary);}
+.brand-ai{color:var(--accent);}
+.brand-sub{font-size:11px;color:var(--text-muted);margin-left:12px;}
+.nav-meta{display:flex;gap:8px;}
+.meta-badge{font-size:11px;padding:3px 10px;border-radius:100px;border:1px solid var(--border);color:var(--text-secondary);background:var(--bg-primary);}
 
-.main-layout { display: flex; height: 100vh; padding-top: var(--nav-height); }
+/* LAYOUT */
+.main-layout{display:flex;height:100vh;padding-top:var(--nav-height);}
+.input-panel{width:var(--panel-width);min-width:var(--panel-width);background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.panel-header{padding:16px 20px 12px;border-bottom:1px solid var(--border);background:#f8f9fc;}
+.panel-title{font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted);display:flex;align-items:center;gap:8px;}
+.form-body{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
+.form-body::-webkit-scrollbar{width:4px;}
+.form-body::-webkit-scrollbar-thumb{background:#cdd3e0;border-radius:2px;}
 
-.input-panel { width: var(--panel-width); min-width: var(--panel-width); background: #ffffff; border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
-.panel-header { padding: 16px 20px 12px; border-bottom: 1px solid var(--border); background: #f8f9fc; }
-.panel-title { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
-.form-body { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
-.form-body::-webkit-scrollbar { width: 4px; }
-.form-body::-webkit-scrollbar-thumb { background: #cdd3e0; border-radius: 2px; }
-.form-section { display: flex; flex-direction: column; gap: 6px; }
-.form-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; color: var(--text-muted); text-transform: uppercase; }
-.form-input, .form-select, .form-textarea { background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
-.form-input::placeholder, .form-textarea::placeholder { color: var(--text-muted); }
-.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px var(--accent-glow); background: #fff; }
-.form-select option { background: #ffffff; color: var(--text-primary); }
-.form-select:disabled { opacity: 0.45; cursor: not-allowed; }
-.form-textarea { resize: vertical; min-height: 80px; }
-.mt-8 { margin-top: 8px; }
-.generate-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 13px; background: linear-gradient(135deg, var(--accent), #7c5af5); border: none; border-radius: 10px; color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-top: 4px; }
-.generate-btn:hover { background: linear-gradient(135deg, var(--accent-hover), #6a48e0); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(79,110,247,0.3); }
+/* FORM */
+.form-section{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;}
+.form-input,.form-select,.form-textarea{background:#f8f9fc;border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-family:'IBM Plex Sans',sans-serif;font-size:13px;padding:9px 12px;width:100%;transition:border-color .2s,box-shadow .2s;outline:none;}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--text-muted);}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px var(--accent-glow);background:#fff;}
+.form-select:disabled{opacity:.45;cursor:not-allowed;}
+.form-textarea{resize:vertical;min-height:80px;}
+.mt-8{margin-top:8px;}
 
-.output-panel { flex: 1; overflow-y: auto; background: var(--bg-primary); }
-.output-panel::-webkit-scrollbar { width: 6px; }
-.output-panel::-webkit-scrollbar-thumb { background: #cdd3e0; border-radius: 3px; }
+/* TOPIC TABS */
+.topic-tabs{display:flex;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:10px;}
+.topic-tab{flex:1;padding:8px 0;background:#fff;border:none;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .15s;font-family:'IBM Plex Sans',sans-serif;letter-spacing:.3px;}
+.topic-tab:first-child{border-right:1px solid var(--border);}
+.topic-tab.active{background:var(--accent);color:#fff;}
+.topic-tab:hover:not(.active){background:#f0f2ff;color:var(--accent);}
+.topic-panel{display:none;}
+.topic-panel.active{display:flex;flex-direction:column;gap:8px;}
+.unit-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:99px;background:#eef0ff;color:var(--accent);font-weight:600;margin-left:6px;vertical-align:middle;}
 
-.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 40px; }
-.empty-icon { font-size: 56px; margin-bottom: 20px; opacity: 0.4; }
-.empty-title { font-size: 22px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px; }
-.empty-desc { font-size: 14px; color: var(--text-muted); max-width: 380px; line-height: 1.7; }
+/* BTN */
+.generate-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),#7c5af5);border:none;border-radius:10px;color:#fff;font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .3s;margin-top:4px;}
+.generate-btn:hover{background:linear-gradient(135deg,var(--accent-hover),#6a48e0);transform:translateY(-1px);box-shadow:0 8px 24px rgba(79,110,247,.3);}
 
-.loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px; color: var(--text-secondary); }
-.loader-ring { width: 48px; height: 48px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+/* OUTPUT */
+.output-panel{flex:1;overflow-y:auto;background:var(--bg-primary);}
+.output-panel::-webkit-scrollbar{width:6px;}
+.output-panel::-webkit-scrollbar-thumb{background:#cdd3e0;border-radius:3px;}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:40px;}
+.empty-icon{font-size:56px;margin-bottom:20px;opacity:.4;}
+.empty-title{font-size:22px;font-weight:600;color:var(--text-secondary);margin-bottom:12px;}
+.empty-desc{font-size:14px;color:var(--text-muted);max-width:380px;line-height:1.7;}
+.loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:20px;color:var(--text-secondary);}
+.loader-ring{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
 
-.plan-actions { position: sticky; top: 0; z-index: 10; display: flex; gap: 8px; padding: 12px 32px; background: rgba(244,246,251,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
-.action-btn { padding: 7px 16px; border-radius: 7px; border: 1px solid var(--border); background: #ffffff; color: var(--text-primary); font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-.action-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
-.action-btn.secondary:hover { background: var(--bg-input); border-color: var(--text-muted); color: var(--text-primary); }
+/* PLAN */
+.plan-actions{position:sticky;top:0;z-index:10;display:flex;gap:8px;padding:12px 32px;background:rgba(244,246,251,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);}
+.action-btn{padding:7px 16px;border-radius:7px;border:1px solid var(--border);background:#fff;color:var(--text-primary);font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;}
+.action-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+.action-btn.secondary:hover{background:#f0f2f5;border-color:var(--text-muted);color:var(--text-primary);}
+.plan-document{max-width:820px;margin:24px auto;padding:0 32px 48px;animation:slideUp .4s ease;}
+.doc-header{background:#fff;border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.doc-header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.doc-badge{background:linear-gradient(135deg,var(--accent),#7c5af5);color:#fff;padding:4px 14px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:.5px;white-space:nowrap;}
+.doc-meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.doc-meta-item{display:flex;flex-direction:column;gap:3px;}
+.doc-meta-label{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;}
+.doc-meta-value{font-size:14px;font-weight:600;color:var(--text-primary);}
+.plan-section{background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.section-header{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);background:#f8f9fc;}
+.section-num{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.section-num.red{background:rgba(192,57,43,.12);color:#c0392b;}
+.section-num.blue{background:rgba(36,113,163,.12);color:#2471a3;}
+.section-num.green{background:rgba(30,132,73,.12);color:#1e8449;}
+.section-num.orange{background:rgba(211,84,0,.12);color:#d35400;}
+.section-title{font-size:13px;font-weight:700;color:var(--text-primary);letter-spacing:.3px;text-transform:uppercase;}
+.section-body{padding:20px;}
+.bloom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.bloom-card{border-radius:8px;padding:14px;border:1px solid;}
+.bloom-card.a{background:#f0faf1;border-color:#a8d5ab;}
+.bloom-card.b{background:#eef5ff;border-color:#9ec4f5;}
+.bloom-card.c{background:#fff8ee;border-color:#f5c87a;}
+.bloom-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.bloom-card.a .bloom-label{color:#2e7d32;}
+.bloom-card.b .bloom-label{color:#1565c0;}
+.bloom-card.c .bloom-label{color:#e65100;}
+.bloom-name{font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;}
+.bloom-text{font-size:12px;color:var(--text-secondary);line-height:1.6;}
+.design-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.design-item{background:#f8f9fc;border-radius:8px;padding:14px;border:1px solid var(--border);}
+.design-item-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.design-item-text{font-size:12px;color:var(--text-secondary);line-height:1.7;}
+.stages-table{width:100%;border-collapse:collapse;}
+.stages-table th{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-muted);padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);background:#f8f9fc;}
+.stages-table td{padding:14px 12px;font-size:12px;color:var(--text-secondary);vertical-align:top;border-bottom:1px solid var(--border);line-height:1.7;}
+.stages-table tr:last-child td{border-bottom:none;}
+.stage-name{font-weight:700;font-size:12px;color:var(--text-primary);white-space:nowrap;}
+.stage-time{font-size:11px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;margin-top:2px;}
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.diff-card{background:#f8f9fc;border-radius:8px;padding:14px;border:1px solid var(--border);}
+.diff-icon{font-size:20px;margin-bottom:6px;}
+.diff-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;}
+.diff-text{font-size:12px;color:var(--text-secondary);line-height:1.7;}
+.hidden{display:none!important;}
 
-.plan-document { max-width: 820px; margin: 24px auto; padding: 0 32px 48px; animation: slideUp 0.4s ease; }
-.doc-header { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
-.doc-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-.doc-badge { background: linear-gradient(135deg, var(--accent), #7c5af5); color: white; padding: 4px 14px; border-radius: 100px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; white-space: nowrap; }
-.doc-meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-.doc-meta-item { display: flex; flex-direction: column; gap: 3px; }
-.doc-meta-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; color: var(--text-muted); text-transform: uppercase; }
-.doc-meta-value { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+@keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes spin{to{transform:rotate(360deg);}}
 
-.plan-section { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-.section-header { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--border); background: #f8f9fc; }
-.section-num { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-.section-num.red   { background: rgba(192,57,43,0.12);  color: #c0392b; }
-.section-num.blue  { background: rgba(36,113,163,0.12); color: #2471a3; }
-.section-num.green { background: rgba(30,132,73,0.12);  color: #1e8449; }
-.section-num.orange{ background: rgba(211,84,0,0.12);   color: #d35400; }
-.section-title { font-size: 13px; font-weight: 700; color: var(--text-primary); letter-spacing: 0.3px; text-transform: uppercase; }
-.section-body { padding: 20px; }
-
-.bloom-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.bloom-card { border-radius: 8px; padding: 14px; border: 1px solid; }
-.bloom-card.a { background: #f0faf1; border-color: #a8d5ab; }
-.bloom-card.b { background: #eef5ff; border-color: #9ec4f5; }
-.bloom-card.c { background: #fff8ee; border-color: #f5c87a; }
-.bloom-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
-.bloom-card.a .bloom-label { color: #2e7d32; }
-.bloom-card.b .bloom-label { color: #1565c0; }
-.bloom-card.c .bloom-label { color: #e65100; }
-.bloom-name { font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
-.bloom-text { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
-
-.design-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-.design-item { background: var(--bg-input); border-radius: 8px; padding: 14px; border: 1px solid var(--border); }
-.design-item-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
-.design-item-text { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
-
-.stages-table { width: 100%; border-collapse: collapse; }
-.stages-table th { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); background: #f8f9fc; }
-.stages-table td { padding: 14px 12px; font-size: 12px; color: var(--text-secondary); vertical-align: top; border-bottom: 1px solid var(--border); line-height: 1.7; }
-.stages-table tr:last-child td { border-bottom: none; }
-.stage-name { font-weight: 700; font-size: 12px; color: var(--text-primary); white-space: nowrap; }
-.stage-time { font-size: 11px; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-top: 2px; }
-
-.diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.diff-card { background: var(--bg-input); border-radius: 8px; padding: 14px; border: 1px solid var(--border); }
-.diff-icon { font-size: 20px; margin-bottom: 6px; }
-.diff-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
-.diff-text { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
-
-.hidden { display: none !important; }
-@keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-@media print {
-  body { background: white !important; color: black !important; overflow: auto !important; font-size: 11pt; }
-  .navbar, .input-panel, .plan-actions { display: none !important; }
-  .main-layout { padding-top: 0; height: auto; display: block; }
-  .output-panel { overflow: visible; background: white; }
-  .plan-document { max-width: 100%; margin: 0; padding: 10mm 15mm; }
-  .doc-header { background: #f5f5f5 !important; border: 2px solid #333 !important; }
-  .doc-meta-label, .doc-school-name { color: #444 !important; }
-  .doc-meta-value { color: black !important; }
-  .doc-badge { background: #333 !important; }
-  .plan-section { background: white !important; border: 1px solid #ccc !important; break-inside: avoid; margin-bottom: 12pt; }
-  .section-header { background: #f0f0f0 !important; border-bottom: 1px solid #ccc !important; }
-  .section-title, .stage-name { color: black !important; }
-  .section-num { color: black !important; background: #ddd !important; }
-  .bloom-card, .design-item, .diff-card { background: #f9f9f9 !important; border-color: #ccc !important; }
-  .bloom-label, .design-item-label, .diff-label, .bloom-text, .design-item-text, .diff-text { color: #333 !important; }
-  .stages-table th { background: #eee !important; color: black !important; border: 1px solid #ccc; }
-  .stages-table td { color: #222 !important; border: 1px solid #ddd; }
-  .stage-time { color: #666 !important; }
+@media print{
+  body{background:#fff!important;color:#000!important;overflow:auto!important;font-size:11pt;}
+  .navbar,.input-panel,.plan-actions{display:none!important;}
+  .main-layout{padding-top:0;height:auto;display:block;}
+  .output-panel{overflow:visible;background:#fff;}
+  .plan-document{max-width:100%;margin:0;padding:10mm 15mm;}
+  .doc-header{background:#f5f5f5!important;border:2px solid #333!important;}
+  .doc-meta-label{color:#444!important;}
+  .doc-meta-value{color:#000!important;}
+  .doc-badge{background:#333!important;}
+  .plan-section{background:#fff!important;border:1px solid #ccc!important;break-inside:avoid;margin-bottom:12pt;}
+  .section-header{background:#f0f0f0!important;border-bottom:1px solid #ccc!important;}
+  .section-title,.stage-name{color:#000!important;}
+  .bloom-card,.design-item,.diff-card{background:#f9f9f9!important;border-color:#ccc!important;}
+  .bloom-text,.design-item-text,.diff-text{color:#333!important;}
+  .stages-table th{background:#eee!important;color:#000!important;border:1px solid #ccc;}
+  .stages-table td{color:#222!important;border:1px solid #ddd;}
 }
-    </style>
+</style>
 </head>
 <body>
-    <nav class="navbar">
-        <div style="display:flex;align-items:baseline;gap:4px;">
-            <span class="brand-text">Багш<span class="brand-ai">AI</span></span>
-            <span class="brand-sub">ЕБС-ийн хичээлийн хөтөлбөр боловсруулагч</span>
-        </div>
-        <div class="nav-meta">
-            <span class="meta-badge">🇲🇳 Монгол хэл</span>
-            <span class="meta-badge">1–12-р анги</span>
-            <span class="meta-badge">A4 хэвлэх</span>
-        </div>
-    </nav>
 
-    <main class="main-layout">
-        <aside class="input-panel">
-            <div class="panel-header">
-                <div class="panel-title">📋 Хичээлийн мэдээлэл</div>
-            </div>
-            <div class="form-body">
-                <div class="form-section">
-                    <label class="form-label">Сургалтын менежерийн нэр</label>
-                    <input type="text" id="managerName" class="form-input" placeholder="Жишээ нь: Б.Цэцэг">
-                </div>
-                <div class="form-section">
-                    <label class="form-label">Багшийн нэр</label>
-                    <input type="text" id="teacherName" class="form-input" placeholder="Жишээ нь: Д.Бат">
-                </div>
-                <div class="form-section">
-                    <label class="form-label">Анги</label>
-                    <select id="gradeSelect" class="form-select" onchange="loadSubjects()">
-                        <option value="">— Сонгох —</option>
-                    </select>
-                </div>
-                <div class="form-section">
-                    <label class="form-label">Хичээлийн нэр</label>
-                    <select id="subjectSelect" class="form-select" onchange="loadTopics()" disabled>
-                        <option value="">— Эхлээд анги сонгоно уу —</option>
-                    </select>
-                </div>
-                <div class="form-section">
-                    <label class="form-label">Нэгж хичээлийн сэдэв</label>
-                    <select id="negjSelect" class="form-select" disabled onchange="loadEelj()">
-                        <option value="">— Эхлээд хичээл сонгоно уу —</option>
-                    </select>
-                </div>
-                <div class="form-section">
-                    <label class="form-label">Ээлжит хичээлийн сэдэв</label>
-                    <select id="eeljSelect" class="form-select" disabled>
-                        <option value="">— Эхлээд нэгж сонгоно уу —</option>
-                    </select>
-                    <input type="text" id="topicCustom" class="form-input mt-8" placeholder="Эсвэл өөрийн сэдэв бичнэ үү...">
-                </div>
-                <div class="form-section">
-                    <label class="form-label">Хугацаа</label>
-                    <select id="periodSelect" class="form-select">
-                        <option value="40">40 минут</option>
-                        <option value="45">45 минут</option>
-                        <option value="80">80 минут (давхар)</option>
-                        <option value="90">90 минут (давхар)</option>
-                    </select>
-                </div>
-                <div class="form-section">
-                    <label class="form-label">Суралцахуйн зорилт (нэмэлт)</label>
-                    <textarea id="objectives" class="form-textarea" rows="3" placeholder="Сурагч энэ хичээлийн дараа юуг мэдэж, хийж чадах болох..."></textarea>
-                </div>
-                <button class="generate-btn" onclick="generatePlan()">
-                    <span>✦</span> AI-аар хөтөлбөр үүсгэх
-                </button>
-            </div>
-        </aside>
+<nav class="navbar">
+  <div style="display:flex;align-items:baseline;gap:4px;">
+    <span class="brand-text">Багш<span class="brand-ai">AI</span></span>
+    <span class="brand-sub">ЕБС-ийн хичээлийн хөтөлбөр боловсруулагч</span>
+  </div>
+  <div class="nav-meta">
+    <span class="meta-badge">🇲🇳 Монгол хэл</span>
+    <span class="meta-badge">1–12-р анги</span>
+    <span class="meta-badge">A4 хэвлэх бэлэн</span>
+  </div>
+</nav>
 
-        <section class="output-panel" id="outputPanel">
-            <div class="empty-state" id="emptyState">
-                <div class="empty-icon">📄</div>
-                <h3 class="empty-title">Хөтөлбөр үүсгэхэд бэлэн</h3>
-                <p class="empty-desc">Зүүн талын маягтыг бөглөөд товч дарна уу. Монгол хэл, A4 хэвлэхэд бэлэн хөтөлбөр хэдэн секундэд гарна.</p>
-            </div>
-            <div class="loading-state hidden" id="loadingState">
-                <div class="loader-ring"></div>
-                <p>Хөтөлбөр боловсруулж байна...</p>
-            </div>
-            <div class="hidden" id="planOutput">
-                <div class="plan-actions">
-                    <button class="action-btn" onclick="window.print()">🖨️ Хэвлэх</button>
-                    <button class="action-btn" onclick="copyText()">📋 Хуулах</button>
-                    <button class="action-btn secondary" onclick="resetOutput()">🔄 Шинэчлэх</button>
-                </div>
-                <div id="planContent"></div>
-            </div>
-        </section>
-    </main>
+<main class="main-layout">
+  <aside class="input-panel">
+    <div class="panel-header">
+      <div class="panel-title">📋 Хичээлийн мэдээлэл</div>
+    </div>
+    <div class="form-body">
+
+      <div class="form-section">
+        <label class="form-label">Сургалтын менежерийн нэр</label>
+        <input type="text" id="managerName" class="form-input" placeholder="Жишээ нь: Б.Цэцэг">
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Багшийн нэр</label>
+        <input type="text" id="teacherName" class="form-input" placeholder="Жишээ нь: Д.Бат">
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Анги</label>
+        <select id="gradeSelect" class="form-select" onchange="onGradeChange()">
+          <option value="">— Сонгох —</option>
+        </select>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Хичээлийн нэр</label>
+        <select id="subjectSelect" class="form-select" onchange="onSubjectChange()" disabled>
+          <option value="">— Эхлээд анги сонгоно уу —</option>
+        </select>
+      </div>
+
+      <!-- TOPIC SECTION: Нэгж / Ээлжит таб -->
+      <div class="form-section" id="topicSection">
+        <label class="form-label">Хичээлийн сэдэв</label>
+
+        <div class="topic-tabs">
+          <button class="topic-tab active" id="tab-negj" onclick="switchTopicTab('negj')">
+            📚 Нэгж хичээл
+          </button>
+          <button class="topic-tab" id="tab-eeljit" onclick="switchTopicTab('eeljit')">
+            📖 Ээлжит хичээл
+          </button>
+        </div>
+
+        <!-- Нэгж хичээл -->
+        <div class="topic-panel active" id="panel-negj">
+          <select id="unitSelect" class="form-select" onchange="onUnitChange('negj')" disabled>
+            <option value="">— Нэгж сонгоно уу —</option>
+          </select>
+        </div>
+
+        <!-- Ээлжит хичээл -->
+        <div class="topic-panel" id="panel-eeljit">
+          <select id="unitSelect2" class="form-select" onchange="onUnitChange('eeljit')" disabled>
+            <option value="">— Нэгж сонгоно уу —</option>
+          </select>
+          <select id="lessonSelect" class="form-select" onchange="onLessonChange()" disabled>
+            <option value="">— Ээлжит хичээл сонгоно уу —</option>
+          </select>
+        </div>
+
+        <input type="text" id="topicCustom" class="form-input mt-8"
+          placeholder="Эсвэл өөрийн сэдэв бичнэ үү...">
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Хугацаа</label>
+        <select id="periodSelect" class="form-select">
+          <option value="40">40 минут</option>
+          <option value="45">45 минут</option>
+          <option value="80">80 минут (давхар)</option>
+          <option value="90">90 минут (давхар)</option>
+        </select>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Суралцахуйн зорилт (нэмэлт)</label>
+        <textarea id="objectives" class="form-textarea" rows="3"
+          placeholder="Сурагч энэ хичээлийн дараа юуг мэдэж, хийж чадах болох..."></textarea>
+      </div>
+
+      <button class="generate-btn" onclick="generatePlan()">
+        <span>✦</span> AI-аар хөтөлбөр үүсгэх
+      </button>
+
+    </div>
+  </aside>
+
+  <section class="output-panel" id="outputPanel">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">📄</div>
+      <h3 class="empty-title">Хөтөлбөр үүсгэхэд бэлэн</h3>
+      <p class="empty-desc">Зүүн талын маягтыг бөглөөд товч дарна уу.<br>
+        Монгол хэл, A4 хэвлэхэд бэлэн хөтөлбөр хэдэн секундэд гарна.</p>
+    </div>
+    <div class="loading-state hidden" id="loadingState">
+      <div class="loader-ring"></div>
+      <p>Хөтөлбөр боловсруулж байна...</p>
+    </div>
+    <div class="hidden" id="planOutput">
+      <div class="plan-actions">
+        <button class="action-btn" onclick="window.print()">🖨️ Хэвлэх</button>
+        <button class="action-btn" onclick="copyText()">📋 Хуулах</button>
+        <button class="action-btn secondary" onclick="resetOutput()">🔄 Шинэчлэх</button>
+      </div>
+      <div id="planContent"></div>
+    </div>
+  </section>
+</main>
 
 <script>
-// ======================================
-// CURRICULUM DATA (embedded)
-// ======================================
-const CURRICULUM = {
-  "1": { label: "1-р анги", subjects: {
-    "Монгол хэл": {
-      "Авиа, үсэг зүй": ["Эгшиг авиа, гийгүүлэгч авиа", "Авианы бүтэц, дуудлага", "Том, жижиг үсэг бичих", "Тасархай үсэг, холбоо үсэг"],
-      "Уншлага": ["Үеэр уншлага", "Бүтэн үгийн уншлага", "Өгүүлбэр уншлага", "Текст уншлага"],
-      "Бичих": ["Шугам дээр бичих дасгал", "Үсэг хуулах", "Дуктант бичих"],
-      "Яриа хэлэлцээ": ["Өдөр тутмын ярианы хэлц", "Асуулт хариулт", "Зургаар ярих"]
-    },
-    "Математик": {
-      "Тоо 1–10": ["1–5 тоог таних, бичих", "6–10 тоог таних, бичих", "Тоог харьцуулах", "Тооны дараалал"],
-      "Нэмэх хасах": ["10-н дотор нэмэх", "10-н дотор хасах", "Тэнцэтгэл бичих"],
-      "Геометрийн хэлбэр": ["Дугуй, гурвалжин, дөрвөлжин", "Хэлбэрийг ялгах, нэрлэх"]
-    }
-  }},
-  "2": { label: "2-р анги", subjects: {
-    "Монгол хэл": {
-      "Үгийн бүтэц": ["Үеийн тоо тодорхойлох", "Эгшиг зохицол", "Үгийн найруулга"],
-      "Өгүүлбэр": ["Энгийн өгүүлбэр", "Асуух өгүүлбэр", "Тушаах өгүүлбэр"],
-      "Уншлага": ["Дуу чимээтэй унших", "Дотроо унших", "Ойлгож унших"],
-      "Найруулга": ["Зургаар өгүүлэх", "Богино өгүүллэг бичих"]
-    },
-    "Математик": {
-      "Тоо 1–100": ["10-аас дээш тоо", "Хоёр оронтой тоо", "Тоог харьцуулах"],
-      "Нэмэх хасах": ["Шилжилтгүй нэмэх", "Шилжилттэй нэмэх", "Хасах үйлдэл"],
-      "Хэмжих нэгж": ["Урт хэмжих", "Жин хэмжих", "Цаг хугацаа"]
-    }
-  }},
-  "3": { label: "3-р анги", subjects: {
-    "Монгол хэл": {
-      "Үг хэллэг": ["Нэр үг", "Үйл үг", "Тэмдэг нэр", "Тоо хэмжээний үг"],
-      "Найруулга зохиол": ["Өгүүллэг зохиох", "Тайлбар бичих", "Захидал бичих"],
-      "Уран зохиол": ["Үлгэр унших, шинжлэх", "Шүлэг цээжлэх"]
-    },
-    "Математик": {
-      "Үржүүлэх хуваах": ["Үржүүлэх хүснэгт", "Хуваах үйлдэл", "Орлуулан бодох"],
-      "Бутархай эхлэл": ["Бутархай тоо таних", "Энгийн бутархай"],
-      "Геометри": ["Дөрвөлжин талбай", "Гурвалжин, тойрог"]
-    }
-  }},
-  "4": { label: "4-р анги", subjects: {
-    "Монгол хэл": {
-      "Уран зохиол шинжлэл": ["Зохиолын дүрийн шинж", "Учир шалтгаан", "Зохиолын санаа"],
-      "Эссэ бичих": ["Гарчиг, дэд гарчиг", "Эссэний бүтэц", "Баримтжуулах"],
-      "Яруу найраг": ["Шүлгийн ритм", "Дүрслэл", "Уран яруу найраг зохиох"]
-    },
-    "Математик": {
-      "Бутархай тоо": ["Ердийн бутархай", "Аравтын бутархай", "Бутархай харьцуулах"],
-      "Хувь": ["Хувийн тухай ойлголт", "Хувь тооцоолох", "Амьдрал дахь хэрэглээ"],
-      "Геометрийн хэмжээ": ["Периметр", "Талбай", "Эзлэхүүн"]
-    }
-  }},
-  "5": { label: "5-р анги", subjects: {
-    "Монгол хэл, уран зохиол": {
-      "Найруулга зүй": ["Найруулгын төрөл", "Утга зохиолын стиль", "Хэлний хэм хэмжээ"],
-      "Уран зохиолын онол": ["Зохиолын жанр", "Дүрийн ертөнц", "Зохиогчийн санаа"],
-      "Ардын аман зохиол": ["Үлгэр домог", "Ардын дуу", "Оньсого таавар"]
-    },
-    "Математик": {
-      "Натурал тоо": ["Том тоотой үйлдэл", "Хуваагдах тэмдэг", "Эрэмбэ"],
-      "Бутархай": ["Нийтлэг хуваарь", "Нэмэх хасах", "Үржүүлэх хуваах"],
-      "Геометри": ["Координатын хавтгай", "Тэгш хэм", "Хувиргалт"]
-    },
-    "Физик": {
-      "Хөдөлгөөн": ["Механик хөдөлгөөн", "Хурд, хугацаа", "Хурдатгал"],
-      "Хүч": ["Хүчний төрөл", "Ньютоны хуулиуд", "Хүчний хэмжилт"],
-      "Дулаан": ["Дулааны шилжилт", "Тэлэлт агших", "Дулааны тэнцвэр"]
-    },
-    "Биологи": {
-      "Эс": ["Эсийн бүтэц", "Эсийн үүрэг", "Эсийн хуваагдал"],
-      "Ургамлын биологи": ["Ургамлын эрхтэн", "Фотосинтез", "Ургамлын ус солилцоо"],
-      "Амьтны биологи": ["Амьтны ангилал", "Биологийн шинж", "Хүнсний хэлхээ"]
-    },
-    "Мэдээлэл зүй": {
-      "Компьютерийн үндэс": ["Компьютерийн үүсэл, хөгжил", "Компьютерийн үндсэн төхөөрөмж", "Мэдээлэл оруулах, гаргах"],
-      "Интернэт": ["Интернэтийн тухай ойлголт", "Хайлт хийх арга", "Аюулгүй байдал"],
-      "Мэдээлэл боловсруулалт": ["Бичвэр боловсруулах программ", "Текст форматлах", "Хадгалах, хэвлэх"]
-    }
-  }},
-  "6": { label: "6-р анги", subjects: {
-    "Монгол хэл, уран зохиол": {
-      "Хэлний систем": ["Авиа зүй давтах", "Үгийн бүтэц", "Морфологийн үндэс"],
-      "Зохиол найруулга": ["Тайлбар найруулга", "Өгүүлэмж найруулга", "Нотолгоо найруулга"],
-      "Уран зохиолын шинжлэл": ["Зохиолын бүтэц", "Дүрийн дүн шинжилгээ", "Зохиогчийн үзэл бодол"],
-      "Яруу найраг": ["Шүлгийн хэмнэл", "Дүрслэлийн хэрэгсэл", "Шүлэг найруулах дасгал"]
-    },
-    "Математик": {
-      "Бүхэл тоо": ["Бүхэл тооны тухай ойлголт", "Бүхэл тоон дээрх үйлдэл", "Координатын тэнхлэг"],
-      "Оновчлол": ["Тоон илэрхийлэл", "Тэгшитгэл шийдэх", "Бодлого шийдэх арга"],
-      "Геометр": ["Гурвалжны шинж чанар", "Тэгш өнцөгт параллелепипед", "Геометрийн тооцоо"],
-      "Координатын систем": ["Координатын хавтгай", "Цэг байрлуулах", "График зурах"]
-    },
-    "Физик": {
-      "Механик": ["Хурд, хугацаа, зай", "Тэнцвэрт байдал", "Хөшүүрэг, блок"],
-      "Гидростатик": ["Даралтын тухай ойлголт", "Архимедийн хууль", "Хөвөх, живэх нөхцөл"],
-      "Дулаан шилжилт": ["Дулааны төрлүүд", "Дулааны дамжуулалт", "Дулааны тэлэлт"]
-    },
-    "Хими": {
-      "Атом, молекул": ["Атомын бүтэц", "Молекул, химийн томьёо", "Химийн элементүүд"],
-      "Химийн бондын төрөл": ["Ион бонд", "Ковалент бонд", "Металл бонд"],
-      "Хүчил суурь": ["Хүчлийн шинж", "Суурийн шинж", "pH тухай ойлголт"]
-    },
-    "Биологи": {
-      "Бактери, вирус": ["Микроорганизмын бүтэц", "Халдварт өвчин", "Дархлаа"],
-      "Ургамлын систем": ["Ургамлын ангилал", "Ургамлын үржил", "Ургамлын аж ахуй"],
-      "Амьтны систем": ["Нугасгүйтэн", "Нугастан", "Монголын амьтны аймаг"]
-    },
-    "Газарзүй": {
-      "Уур амьсгал": ["Уур амьсгалын бүс", "Монголын уур амьсгал", "Цаг агаарын хэмжилт"],
-      "Усны нөөц": ["Гол, нуур", "Газар доорх ус", "Монголын усны нөөц"],
-      "Дэлхийн бүс нутаг": ["Тив, далай", "Байгалийн бүс", "Хүн амын тархалт"]
-    },
-    "Түүх": {
-      "Дундад зууны Монгол": ["Монголын нэгдэл", "Чингис хааны үе", "Монголын эзэнт гүрэн"],
-      "Дэлхийн түүх": ["Дундад зуун", "Сэргэн мандалт", "Аж үйлдвэрийн хувьсгал"]
-    },
-    "Англи хэл": {
-      "Past Simple": ["Past Simple тогтмол үйл үг", "Past Simple тогтмол бус үйл үг", "Past Simple асуулт, үгүйсгэл"],
-      "Past Continuous": ["Past Continuous бүтэц", "Past Continuous хэрэглээ", "Past Simple vs Continuous"],
-      "Modal verbs": ["can, could хэрэглээ", "must, have to", "should, might"]
-    },
-    "Мэдээлэл зүй": {
-      "Мэдээлэл ба нийгэм": [
-        "Мэдээлэл гэж юу вэ? Мэдээллийн шинж чанар",
-        "Мэдээллийн хувьсгал, мэдээллийн нийгэм",
-        "Мэдээллийн нийгэмд хүний үүрэг",
-        "Мэдээллийн аюулгүй байдал",
-        "Мэдээлэл хайх, үнэлэх арга"
-      ],
-      "Объект ба загвар": [
-        "Объект гэж юу вэ? Объектын төрөл",
-        "Объектын шинж чанар, ач холбогдол",
-        "Объектын орчин, бүлэг объект",
-        "Материаллаг загвар, онцлог",
-        "Мэдээллэн загвар, дүрслэх хэлбэр",
-        "Мэдээллэн загвар байгуулах нь"
-      ],
-      "Компьютер": [
-        "Компьютерийн үүсэл, хөгжлийн түүх",
-        "Компьютерийн үйл ажиллагааны зарчим",
-        "Компьютерийн үндсэн төхөөрөмжүүд",
-        "Мэдээлэл оруулах, гаргах төхөөрөмж",
-        "Компьютерийн лаборатори, дэг журам",
-        "Компьютертай ажиллах эрүүл мэндийн шаардлага"
-      ],
-      "Компьютерийн бүтэц, техник хангамж": [
-        "Компьютерийн үндсэн төхөөрөмжүүдийн үүрэг",
-        "Процессор, санах ой, хатуу диск",
-        "Мэдээлэл оруулах нэмэлт төхөөрөмжүүд",
-        "Мэдээлэл гаргах нэмэлт төхөөрөмжүүд",
-        "Компьютерийн сүлжээний үндэс"
-      ],
-      "Бичвэр мэдээлэл боловсруулах технологи": [
-        "Бичвэр боловсруулах программ нээх, хаах",
-        "Текст оруулах, засах, форматлах",
-        "Хуулах, тайрах, буулгах үйлдлүүд",
-        "Параграф, хуудасны тохиргоо",
-        "Хүснэгт оруулах, засах",
-        "Зураг, обьект оруулах",
-        "Баримт бичиг хадгалах, хэвлэх"
-      ],
-      "Алгоритм ба программчлал": [
-        "Алгоритм гэж юу вэ? Алгоритмын шинж чанар",
-        "Алгоритмыг дүрслэх арга (блок схем, псевдокод)",
-        "Шугаман алгоритм",
-        "Салааланах алгоритм",
-        "Давталттай алгоритм",
-        "Дэд программ, функц"
-      ]
-    }
-  }},
-  "7": { label: "7-р анги", subjects: {
-    "Монгол хэл, уран зохиол": {
-      "Синтакс": ["Өгүүлбэрийн гишүүд", "Нийлмэл өгүүлбэр", "Нийлэг өгүүлбэр"],
-      "Нийтлэлийн жанр": ["Мэдээ нийтлэл", "Тайлбар нийтлэл", "Шүүмж"]
-    },
-    "Алгебр": {
-      "Алгебрийн илэрхийлэл": ["Хувьсагч, коэффициент", "Ижил гишүүд нэгтгэх", "Олон гишүүнт"],
-      "Тэгшитгэл": ["Нэг хувьсагчтай тэгшитгэл", "Хоёр хувьсагчтай тэгшитгэл", "Тэгшитгэлийн систем"],
-      "Функц": ["Функцийн тухай ойлголт", "Шугаман функц", "График зурах"]
-    },
-    "Физик": {
-      "Кинематик": ["Тэгш хурдтай хөдөлгөөн", "Хурдатгалтай хөдөлгөөн", "Чөлөөтэй унах"],
-      "Динамик": ["Ньютоны 1-р хууль", "Ньютоны 2-р хууль", "Ньютоны 3-р хууль"],
-      "Хадгалагдах хуулиуд": ["Импульсийн хадгалалт", "Энергийн хадгалалт"]
-    },
-    "Мэдээлэл зүй": {
-      "Алгоритм": ["Алгоритмын төрөл", "Блок схем зохиох", "Алгоритм шинжлэх"],
-      "Scratch програмчлал": ["Scratch интерфейс", "Блок хэрэглэх", "Жижиг тоглоом хийх"],
-      "Мэдээллийн сан эхлэл": ["Мэдээллийн сангийн тухай", "Хүснэгт зохиох", "Дан лист"]
-    }
-  }},
-  "8": { label: "8-р анги", subjects: {
-    "Монгол хэл, уран зохиол": {
-      "Морфологи": ["Үгийн бүтэц дахин", "Нөхцлийн ангилал", "Үгийн аялгуу"],
-      "Уран зохиолын дүн шинжилгээ": ["Романы бүтэц", "Дүрийн хөгжил", "Зохиолын санаа"]
-    },
-    "Алгебр": {
-      "Квадрат тэгшитгэл": ["Квадрат тэгшитгэлийн бүтэц", "Виетийн теорем", "Шийдэх аргууд"],
-      "Прогресс": ["Арифметик прогресс", "Геометр прогресс", "Нийлбэр олох"]
-    },
-    "Физик": {
-      "Цахилгаан": ["Цахилгаан гүйдэл", "Омын хууль", "Цахилгаан хэлхээ"],
-      "Соронзон": ["Соронзон орон", "Электромагнит индукц"],
-      "Гэрлийн физик": ["Гэрлийн тархалт", "Тусгал, хугарал", "Шилэн систем"]
-    },
-    "Мэдээлэл зүй": {
-      "Python эхлэл": ["Python суулгах, танилцах", "Хувьсагч, өгөгдлийн төрөл", "Оролт, гаралт"],
-      "Мэдээллийн сан": ["SQL эхлэл", "Хүснэгт үүсгэх", "Өгөгдөл нэмэх, хайх"],
-      "Вэб хөгжүүлэлт": ["HTML үндэс", "CSS стиль", "Жижиг вэб хуудас хийх"]
-    }
-  }},
-  "9": { label: "9-р анги", subjects: {
-    "Монгол хэл, уран зохиол": {
-      "Хэл шинжлэл": ["Хэл шинжлэлийн салбар", "Монгол хэлний онцлог"],
-      "Нийтлэл шүүмж": ["Шүүмжийн бүтэц", "Эх сурвалж ашиглах"]
-    },
-    "Алгебр": {
-      "Функцийн шинж чанар": ["Функцийн ерөнхий шинж", "Урвуу функц", "Нийлмэл функц"],
-      "Тригонометр": ["Тригонометрийн харьцаа", "Тригонометрийн тэгшитгэл"],
-      "Вектор": ["Вектор нэмэх хасах", "Векторын үржвэр"]
-    },
-    "Мэдээлэл зүй": {
-      "Python дэвшилтэт": ["Функц, модуль", "Файлтай ажиллах", "Алдаа засварлах"],
-      "Алгоритм": ["Хайлтын алгоритм", "Эрэмбэлэх алгоритм", "Цаг зарцуулалт"],
-      "Хиймэл оюун": ["Хиймэл оюуны тухай", "Машинаар суралцах эхлэл", "Жишээ хэрэглээ"]
-    }
-  }},
-  "10": { label: "10-р анги", subjects: {
-    "Монгол хэл, уран зохиол": {
-      "Уран зохиолын онол": ["Уран зохиолын жанр, төрөл", "Дэлхийн сонгодог зохиол"],
-      "Хэвлэл мэдээлэл": ["Медиа грамм", "Мэдээний эх сурвалж"]
-    },
-    "Математик шинжлэл": {
-      "Дифференциал тооцоо эхлэл": ["Лимит", "Уламжлал", "Уламжлалын дүрэм"],
-      "Интеграл тооцоо": ["Тодорхой бус интеграл", "Тодорхой интеграл"]
-    },
-    "Мэдээлэл зүй": {
-      "Хиймэл оюун": ["Нейрон сүлжээний үндэс", "Зургийг таних", "Чатбот хийх"],
-      "Machine Learning эхлэл": ["Supervised learning", "Өгөгдөл боловсруулах"],
-      "Мэдээллийн шинжлэх ухаан": ["Өгөгдлийн дүн шинжилгээ", "График, дүрслэл"]
-    }
-  }},
-  "11": { label: "11-р анги", subjects: {
-    "Монгол хэл, уран зохиол": {
-      "Дэлхийн уран зохиол": ["Орчин үеийн дэлхийн зохиол", "Орчуулгын уран зохиол"],
-      "Судалгааны арга": ["Судалгааны бичвэр", "Эх сурвалж ишлэл"]
-    },
-    "Математик": {
-      "Дифференциал тооцоо": ["Уламжлал хэрэглэх", "Экстремум", "Муруйн шинж"],
-      "Интеграл тооцоо": ["Интегралын дүрэм", "Талбай, эзлэхүүн тооцох"]
-    },
-    "Мэдээлэл зүй": {
-      "Сүлжээний технологи": ["TCP/IP протокол", "Сүлжээний топологи", "Галт хана"],
-      "Кибер аюулгүй байдал": ["Халдлагын төрөл", "Хамгааллын арга", "Шифрлэлт"],
-      "Хөгжүүлэлт": ["Фреймворк ашиглах", "API холболт", "Баг ажил"]
-    }
-  }},
-  "12": { label: "12-р анги", subjects: {
-    "Монгол хэл, уран зохиол": {
-      "ЭЕШ бэлтгэл": ["Уран зохиолын шинжлэл", "Найруулгын дасгал", "Шалгалтын жишиг"],
-      "Судалгааны зохиол": ["Дипломын ажил бичих", "Судалгааны арга зүй"]
-    },
-    "Математик": {
-      "ЭЕШ бэлтгэл": ["Алгебрийн бодлого", "Геометрийн бодлого", "Статистик бодлого"],
-      "Дэвшилтэт интеграл": ["Интегралын тусгай арга", "Дифференциал тэгшитгэл"]
-    },
-    "Мэдээлэл зүй": {
-      "Дипломын ажил": ["Сэдэв сонгох, судлах", "Системийн зохион байгуулалт", "Хамгаалалт"],
-      "Хиймэл оюун хэрэглээ": ["LLM ашиглах", "Automation", "Бодлого шийдэх"],
-      "Системийн архитектур": ["Серверийн архитектур", "Мэдээллийн сан дизайн", "CI/CD"]
-    }
-  }}
-};
+// ================================================================
+// CURRICULUM DATA — curriculum.json-аас fetch хийнэ
+// ================================================================
+let CURRICULUM = null;
+let activeTopicTab = 'negj';
 
-// Populate grade dropdown
-window.onload = function() {
+async function loadCurriculum() {
+  try {
+    const res = await fetch('data/curriculum.json');
+    CURRICULUM = await res.json();
+    populateGrades();
+  } catch(e) {
+    // Fallback: inline basic data хэрэв fetch амжилтгүй бол
+    console.warn('curriculum.json fetch failed, using inline data');
+    CURRICULUM = window.FALLBACK_CURRICULUM;
+    populateGrades();
+  }
+}
+
+function populateGrades() {
   const sel = document.getElementById('gradeSelect');
-  Object.entries(CURRICULUM).forEach(([num, data]) => {
+  sel.innerHTML = '<option value="">— Сонгох —</option>';
+  if (!CURRICULUM) return;
+  Object.entries(CURRICULUM.grades).forEach(([num, data]) => {
     const opt = document.createElement('option');
     opt.value = num;
     opt.textContent = data.label;
     sel.appendChild(opt);
   });
-};
-
-function loadSubjects() {
-  const grade = document.getElementById('gradeSelect').value;
-  const subjectSel = document.getElementById('subjectSelect');
-  const negjSel = document.getElementById('negjSelect');
-  const eeljSel = document.getElementById('eeljSelect');
-  subjectSel.innerHTML = '<option value="">— Сонгох —</option>';
-  negjSel.innerHTML = '<option value="">— Эхлээд хичээл сонгоно уу —</option>';
-  eeljSel.innerHTML = '<option value="">— Эхлээд нэгж сонгоно уу —</option>';
-  subjectSel.disabled = !grade;
-  negjSel.disabled = true;
-  eeljSel.disabled = true;
-  if (!grade) return;
-  Object.keys(CURRICULUM[grade].subjects).forEach(s => {
-    const opt = document.createElement('option');
-    opt.value = s; opt.textContent = s;
-    subjectSel.appendChild(opt);
-  });
-  subjectSel.disabled = false;
 }
 
-function loadTopics() {
+// ================================================================
+// GRADE → SUBJECT → UNIT → LESSON chain
+// ================================================================
+function onGradeChange() {
+  const grade = document.getElementById('gradeSelect').value;
+  const subSel = document.getElementById('subjectSelect');
+  subSel.innerHTML = '<option value="">— Сонгох —</option>';
+  subSel.disabled = !grade;
+  resetUnitsAndLessons();
+
+  if (!grade || !CURRICULUM) return;
+  Object.keys(CURRICULUM.grades[grade].subjects).forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s; opt.textContent = s;
+    subSel.appendChild(opt);
+  });
+}
+
+function onSubjectChange() {
+  resetUnitsAndLessons();
   const grade = document.getElementById('gradeSelect').value;
   const subject = document.getElementById('subjectSelect').value;
-  const negjSel = document.getElementById('negjSelect');
-  const eeljSel = document.getElementById('eeljSelect');
-  negjSel.innerHTML = '<option value="">— Сонгох —</option>';
-  eeljSel.innerHTML = '<option value="">— Эхлээд нэгж сонгоно уу —</option>';
-  negjSel.disabled = true;
-  eeljSel.disabled = true;
-  if (!grade || !subject) return;
-  const subjData = CURRICULUM[grade].subjects[subject];
-  if (!subjData) return;
-  if (Array.isArray(subjData)) {
-    // flat list — put into negjSel directly as "ээлжит"
-    negjSel.innerHTML = '<option value="">— Нэгж сонгох —</option>';
-    subjData.forEach(t => {
+  if (!grade || !subject || !CURRICULUM) return;
+
+  const units = CURRICULUM.grades[grade].subjects[subject].units;
+
+  // Populate both unit selects
+  ['unitSelect','unitSelect2'].forEach(id => {
+    const sel = document.getElementById(id);
+    sel.innerHTML = '<option value="">— Нэгж сонгоно уу —</option>';
+    units.forEach((u, i) => {
       const opt = document.createElement('option');
-      opt.value = t; opt.textContent = t;
-      negjSel.appendChild(opt);
+      opt.value = i;
+      opt.textContent = u.title;
+      sel.appendChild(opt);
     });
-    negjSel.disabled = false;
-    eeljSel.innerHTML = '<option value="">— Бүгд нэгж сэдэв —</option>';
+    sel.disabled = false;
+  });
+}
+
+function onUnitChange(tab) {
+  const selId = tab === 'negj' ? 'unitSelect' : 'unitSelect2';
+  const unitIdx = document.getElementById(selId).value;
+
+  if (tab === 'eeljit') {
+    const grade = document.getElementById('gradeSelect').value;
+    const subject = document.getElementById('subjectSelect').value;
+    const lessSel = document.getElementById('lessonSelect');
+    lessSel.innerHTML = '<option value="">— Ээлжит хичээл сонгоно уу —</option>';
+    lessSel.disabled = true;
+
+    if (unitIdx === '' || !CURRICULUM) return;
+    const lessons = CURRICULUM.grades[grade].subjects[subject].units[unitIdx].lessons;
+    lessons.forEach(l => {
+      const opt = document.createElement('option');
+      opt.value = l; opt.textContent = l;
+      lessSel.appendChild(opt);
+    });
+    lessSel.disabled = false;
+  }
+}
+
+function onLessonChange() {
+  // nothing extra needed — value read at generate time
+}
+
+function resetUnitsAndLessons() {
+  ['unitSelect','unitSelect2'].forEach(id => {
+    const el = document.getElementById(id);
+    el.innerHTML = '<option value="">— Нэгж сонгоно уу —</option>';
+    el.disabled = true;
+  });
+  const ls = document.getElementById('lessonSelect');
+  ls.innerHTML = '<option value="">— Ээлжит хичээл сонгоно уу —</option>';
+  ls.disabled = true;
+}
+
+// ================================================================
+// TAB SWITCH
+// ================================================================
+function switchTopicTab(tab) {
+  activeTopicTab = tab;
+  document.getElementById('tab-negj').classList.toggle('active', tab === 'negj');
+  document.getElementById('tab-eeljit').classList.toggle('active', tab === 'eeljit');
+  document.getElementById('panel-negj').classList.toggle('active', tab === 'negj');
+  document.getElementById('panel-eeljit').classList.toggle('active', tab === 'eeljit');
+}
+
+// ================================================================
+// RESOLVE selected topic
+// ================================================================
+function getSelectedTopic() {
+  const custom = document.getElementById('topicCustom').value.trim();
+  if (custom) return { topic: custom, unitTitle: '', isEeljit: false };
+
+  const grade = document.getElementById('gradeSelect').value;
+  const subject = document.getElementById('subjectSelect').value;
+  if (!grade || !subject || !CURRICULUM) return null;
+
+  const units = CURRICULUM.grades[grade].subjects[subject].units;
+
+  if (activeTopicTab === 'negj') {
+    const idx = document.getElementById('unitSelect').value;
+    if (idx === '') return null;
+    const unit = units[idx];
+    return { topic: unit.title, unitTitle: unit.title, isEeljit: false, lessonsCount: unit.lessons.length };
   } else {
-    Object.keys(subjData).forEach(negj => {
-      const opt = document.createElement('option');
-      opt.value = negj; opt.textContent = negj;
-      negjSel.appendChild(opt);
-    });
-    negjSel.disabled = false;
+    const idx = document.getElementById('unitSelect2').value;
+    const lesson = document.getElementById('lessonSelect').value;
+    if (idx === '' || !lesson) return null;
+    const unit = units[idx];
+    return { topic: lesson, unitTitle: unit.title, isEeljit: true };
   }
 }
 
-function loadEelj() {
-  const grade = document.getElementById('gradeSelect').value;
-  const subject = document.getElementById('subjectSelect').value;
-  const negj = document.getElementById('negjSelect').value;
-  const eeljSel = document.getElementById('eeljSelect');
-  eeljSel.innerHTML = '<option value="">— Сонгох —</option>';
-  eeljSel.disabled = true;
-  if (!grade || !subject || !negj) return;
-  const subjData = CURRICULUM[grade].subjects[subject];
-  if (Array.isArray(subjData)) {
-    eeljSel.innerHTML = '<option value="">— Нэгж сэдэв сонгогдсон —</option>';
-    return;
-  }
-  const lessons = subjData[negj] || [];
-  lessons.forEach((t, i) => {
-    const opt = document.createElement('option');
-    opt.value = t; opt.textContent = `${i+1}. ${t}`;
-    eeljSel.appendChild(opt);
-  });
-  eeljSel.disabled = false;
-}
-
-
-window.onload = function() {
-  const sel = document.getElementById('gradeSelect');
-  Object.entries(CURRICULUM).forEach(([num, data]) => {
-    const opt = document.createElement('option');
-    opt.value = num;
-    opt.textContent = data.label;
-    sel.appendChild(opt);
-  });
-};
-
-function loadSubjects() {
-  const grade = document.getElementById('gradeSelect').value;
-  const subjectSel = document.getElementById('subjectSelect');
-  const topicSel = document.getElementById('topicSelect');
-  subjectSel.innerHTML = '<option value="">— Сонгох —</option>';
-  topicSel.innerHTML = '<option value="">— Эхлээд хичээл сонгоно уу —</option>';
-  subjectSel.disabled = !grade;
-  topicSel.disabled = true;
-  if (!grade) return;
-  Object.keys(CURRICULUM[grade].subjects).forEach(s => {
-    const opt = document.createElement('option');
-    opt.value = s; opt.textContent = s;
-    subjectSel.appendChild(opt);
-  });
-  subjectSel.disabled = false;
-}
-
-function loadTopics() {
-  const grade = document.getElementById('gradeSelect').value;
-  const subject = document.getElementById('subjectSelect').value;
-  const topicSel = document.getElementById('topicSelect');
-  topicSel.innerHTML = '<option value="">— Сонгох —</option>';
-  topicSel.disabled = true;
-  if (!grade || !subject) return;
-  (CURRICULUM[grade].subjects[subject] || []).forEach(t => {
-    const opt = document.createElement('option');
-    opt.value = t; opt.textContent = t;
-    topicSel.appendChild(opt);
-  });
-  topicSel.disabled = false;
-}
-
+// ================================================================
+// GENERATE
+// ================================================================
 function generatePlan() {
   const grade = document.getElementById('gradeSelect').value;
   const subject = document.getElementById('subjectSelect').value;
-  const negjSel = document.getElementById('negjSelect').value;
-  const eeljSel = document.getElementById('eeljSelect').value;
-  const topicCustom = document.getElementById('topicCustom').value.trim();
-  const topic = topicCustom || eeljSel || negjSel;
+  const topicInfo = getSelectedTopic();
   const period = document.getElementById('periodSelect').value;
   const managerName = document.getElementById('managerName').value.trim();
   const teacherName = document.getElementById('teacherName').value.trim();
 
-  if (!grade || !subject || !topic) { alert('Анги, хичээл, сэдвийг сонгоно уу!'); return; }
-  
+  if (!grade || !subject || !topicInfo) {
+    alert('Анги, хичээл, сэдвийг сонгоно уу!');
+    return;
+  }
+
   showState('loading');
-  
-  // Simulate brief processing
   setTimeout(() => {
-    const plan = buildPlan(grade, subject, topic, period, managerName, teacherName);
+    const gradeLabel = CURRICULUM.grades[grade].label;
+    const plan = buildPlan(gradeLabel, subject, topicInfo, period, managerName, teacherName);
     renderPlan(plan);
     showState('output');
-  }, 800);
+  }, 700);
 }
 
-function buildPlan(grade, subject, topic, period, manager, teacher) {
+function buildPlan(gradeLabel, subject, topicInfo, period, manager, teacher) {
   const p = parseInt(period);
-  const gradeLabel = CURRICULUM[grade].label;
-  const intro = Math.max(5, Math.floor(p/8));
-  const explore = Math.floor(p/3);
-  const practice = Math.floor(p/4);
-  const elaborate = Math.floor(p/6);
-  const evaluate = p - intro - explore - practice - elaborate;
+  const { topic, unitTitle, isEeljit } = topicInfo;
+
+  const intro   = Math.max(5, Math.floor(p * 0.12));
+  const explore = Math.floor(p * 0.35);
+  const practice= Math.floor(p * 0.28);
+  const evaluate= p - intro - explore - practice;
 
   return {
-    header: { subject, topic, grade: gradeLabel, period: `${period} минут`, manager, teacher },
+    header: {
+      subject, topic, unitTitle, isEeljit,
+      grade: gradeLabel,
+      period: `${period} минут`,
+      manager, teacher
+    },
     objectives: {
-      A: `Сурагч ${topic}-ийн үндсэн ойлголт, тодорхойлолтыг мэдэж, жишээ дурдах чадвартай болно.`,
-      B: `Сурагч ${topic}-ийг өмнөх мэдлэгтэй холбон тайлбарлах, шинэ жишээ гаргаж чадна.`,
-      C: `Сурагч ${topic}-ийн мэдлэгийг өөрийн амьдралд хэрэглэж, бүтээлч даалгавар гүйцэтгэх чадвартай болно.`
+      A: `Сурагч "${topic}"-ийн үндсэн ойлголт, тодорхойлолтыг мэдэж, жишээ дурдах чадвартай болно.`,
+      B: `Сурагч "${topic}"-ийг өмнөх мэдлэгтэй холбон тайлбарлах, шинэ нөхцөлд хэрэглэж чадна.`,
+      C: `Сурагч "${topic}"-ийн мэдлэгийг амьдралын нөхцөлд хэрэглэж, бүтээлч даалгавар гүйцэтгэх чадвартай болно.`
     },
     design: {
-      method: `Судалгаанд суурилсан индуктив арга (Discovery Learning): сурагч жишээ дүн шинжилгээгээр дүгнэлт гаргана. Бүлгийн хамтарсан суралцахуй (Cooperative Learning) хос болон бүлгээр ажиллуулна.`,
-      tools: `Wordwall.net тааламжтай интерактив дасгал; Jamboard эсвэл Padlet бүлгийн ажлын самбар; Хэлхэмж зургийн карт; ${subject}-ийн сурах бичиг.`,
-      engagement: `Нийт сурагчид 4-5 хүний бүлгээр ширээний тогтмол байрлалаар ажиллана. ${topic} сэдвийн хичээлд интерактив хэрэглэгдэхүүн ашиглана.`
+      method: `Discovery Learning (судалгаанд суурилсан): сурагч жишээ дүн шинжилгээгээр дүгнэлт гаргана. Cooperative Learning: хос болон бүлгийн ажил.`,
+      tools: `Wordwall.net интерактив дасгал; Jamboard/Padlet бүлгийн самбар; ${subject}-ийн сурах бичиг; хэлхэмж зургийн карт.`,
+      engagement: `Сурагчид 4-5 хүний бүлгээр ширээний тогтмол байрлалаар ажиллана. "${topic}" сэдвийн хичээлд интерактив хэрэглэгдэхүүн ашиглана.`
     },
     stages: [
       {
         name: 'I. ЭХЛЭЛ', time: intro, purpose: 'Оролцоо ба идэвхжүүлэлт',
-        teacher: `Нээлттэй асуулт тавьж урьдчилсан мэдлэгийг идэвхжүүлнэ. ${topic}-тай холбоотой сонирхолтой жишээ эсвэл зураг харуулна. Хичээлийн зорилтыг тодорхойлно.`,
-        student: `${topic}-тай холбоотой өөрсдийн мэдлэг, туршлагаа хуваалцана. Хос болон бүлгийн анхны санааг тэмдэглэнэ.`,
+        teacher: `Нээлттэй асуулт тавьж урьдчилсан мэдлэгийг идэвхжүүлнэ. "${topic}"-тай холбоотой сонирхолтой жишээ эсвэл зураг харуулна. Хичээлийн зорилтыг тодорхойлно.`,
+        student: `"${topic}"-тай холбоотой өөрсдийн мэдлэг, туршлагаа хуваалцана. Анхны санааг тэмдэглэнэ.`,
         assess: 'Нээлттэй асуулт, харилцан ярилцалт'
       },
       {
-        name: 'II. СУДЛАЛ', time: explore + practice, purpose: 'Шинэ мэдлэг олж авах',
-        teacher: `Алхам 1 – Explore (${Math.min(8,explore)}мин): ${topic}-ийн жишээ, нотолгоог судлуулна.\nАлхам 2 – Explain (${Math.min(7,explore)}мин): Бүлгийн дүгнэлтийг нэгтгэн тайлбарлана.\nАлхам 3 – Practice (${practice}мин): Wordwall.net дасгал, хэлхэмж карт ажиллуулна.`,
-        student: `Хос болон бүлгээр ажиллан ${topic}-ийн дүрэм, шинж чанарыг өөрсдөө нээнэ. Самбарт бүлгийн дүгнэлтийг бичнэ. Практик дасгал хийнэ.`,
-        assess: 'Бүлгийн танилцуулга, Wordwall тохируулга, карт ажил'
+        name: 'II. СУДЛАЛ', time: explore, purpose: 'Шинэ мэдлэг олж авах',
+        teacher: `Explore (${Math.round(explore*0.4)}мин): "${topic}"-ийн жишээ, нотолгоог судлуулна.\nExplain (${Math.round(explore*0.3)}мин): Бүлгийн дүгнэлтийг нэгтгэн тайлбарлана.\nGuided practice (${Math.round(explore*0.3)}мин): Wordwall.net дасгал, бүлгийн карт ажил.`,
+        student: `Хос болон бүлгийн ажиллан "${topic}"-ийн дүрэм, шинж чанарыг нээнэ. Самбарт дүгнэлтийг бичнэ.`,
+        assess: 'Бүлгийн танилцуулга, Wordwall дасгал'
       },
       {
-        name: 'III. ДҮГНЭЛТ', time: evaluate, purpose: 'Ойлголт бататгал, үнэлгээ',
-        teacher: `Хичээлийн үр дүнг нэгтгэж, дараагийн холбоог тодорхойлно. Гэрийн даалгавар тайлбарлана. 3-2-1 аргаар дүгнүүлнэ.`,
+        name: 'III. ДАСГАЛ', time: practice, purpose: 'Мэдлэг бататгах',
+        teacher: `Дасгалын хуудас тарааж ганцаарчилсан ажил хийлгэнэ. Алдааг тухайд нь залруулж, дэмжлэг үзүүлнэ. Бэрхшээл тулгарсан сурагчдад нэмэлт тайлбар өгнө.`,
+        student: `Дасгалыг ганцаарчилсан болон хосоор бөглөнө. Хариултаа харилцан шалгаж, засна.`,
+        assess: 'Дасгалын хуудас, харилцан шалгалт'
+      },
+      {
+        name: 'IV. ДҮГНЭЛТ', time: evaluate, purpose: 'Ойлголт үнэлэх',
+        teacher: `Хичээлийн үр дүнг нэгтгэж, дараагийн хичээлийн холбоог тодорхойлно. Гэрийн даалгавар тайлбарлана.`,
         student: `3-2-1 карт бөглөнө (3 сурсан зүйл, 2 сонирхолтой, 1 асуулт). Exit ticket бөглөнө.`,
-        assess: '3-2-1 карт, Exit ticket үнэлгээ'
+        assess: '3-2-1 карт, Exit ticket'
       }
     ],
     diff: {
-      support: `Дэмжлэг хэрэгтэй сурагчид: хялбаршуулсан жишээ, нөхөх дасгал, нэмэлт хос ажил, зурагт дэмжлэг`,
-      advanced: `Дэвшилтэт сурагчид: ахисан түвшний даалгавар, бүтээлч хэрэглээний жишээ гаргах, бусдад тайлбарлах, нэмэлт судалгаа`
+      support: `Дэмжлэг хэрэгтэй сурагчид: хялбаршуулсан жишээ, нөхөх дасгал, нэмэлт хос ажил, зурагт дэмжлэг.`,
+      advanced: `Дэвшилтэт сурагчид: ахисан түвшний даалгавар, бүтээлч хэрэглээний жишээ гаргах, бусдад тайлбарлах, нэмэлт судалгаа.`
     },
-    homework: `${topic}-тай холбоотой 5-7 жишээ бичиж, ямар нөхцөл байдалд хэрэглэгддэгийг тайлбарлах. Econtent дээрх нэмэлт дасгал.`
+    homework: `"${topic}"-тай холбоотой 5–7 жишээ бичиж тайлбарлах. Econtent.mn дээрх нэмэлт дасгал гүйцэтгэх.`
   };
 }
 
+// ================================================================
+// RENDER
+// ================================================================
 function renderPlan(p) {
   const h = p.header;
+  const topicLabel = h.isEeljit
+    ? `<span style="color:#8a96b0;font-size:12px;">Нэгж: ${h.unitTitle} &rarr;</span> ${h.topic}`
+    : h.topic;
+  const topicTypeTag = h.isEeljit
+    ? `<span style="font-size:10px;padding:2px 8px;border-radius:99px;background:#e8f4fd;color:#1a6fa8;font-weight:600;margin-left:8px;">Ээлжит хичээл</span>`
+    : `<span style="font-size:10px;padding:2px 8px;border-radius:99px;background:#eef0ff;color:#3a52c8;font-weight:600;margin-left:8px;">Нэгж хичээл</span>`;
+
   document.getElementById('planContent').innerHTML = `
-    <div class="plan-document">
-      <div class="doc-header">
-        <div class="doc-header-top">
-          <div>
-            <div style="font-size:11px;color:#8a96b0;margin-bottom:6px;">
-              ${h.manager ? `Сургалтын менежер: <strong style="color:#1a2035">${h.manager}</strong>` : 'Ерөнхий боловсролын сургууль'}
-              ${h.teacher ? ` &nbsp;|&nbsp; Багш: <strong style="color:#1a2035">${h.teacher}</strong>` : ''}
-            </div>
-            <div style="font-size:20px;font-weight:700;color:#1a2035;">${h.subject} — ${h.topic}</div>
-          </div>
-          <div class="doc-badge">ХИЧЭЭЛИЙН ХӨТӨЛБӨР</div>
+<div class="plan-document">
+  <div class="doc-header">
+    <div class="doc-header-top">
+      <div>
+        <div style="font-size:11px;color:#8a96b0;margin-bottom:6px;">
+          ${h.manager ? `Сургалтын менежер: <strong style="color:#1a2035">${h.manager}</strong>` : 'Ерөнхий боловсролын сургууль'}
+          ${h.teacher ? ` &nbsp;|&nbsp; Багш: <strong style="color:#1a2035">${h.teacher}</strong>` : ''}
         </div>
-        <div class="doc-meta-grid">
-          <div class="doc-meta-item"><span class="doc-meta-label">Хичээл</span><span class="doc-meta-value">${h.subject}</span></div>
-          <div class="doc-meta-item"><span class="doc-meta-label">Анги</span><span class="doc-meta-value">${h.grade}</span></div>
-          <div class="doc-meta-item"><span class="doc-meta-label">Сэдэв</span><span class="doc-meta-value">${h.topic}</span></div>
-          <div class="doc-meta-item"><span class="doc-meta-label">Хугацаа</span><span class="doc-meta-value">${h.period}</span></div>
+        <div style="font-size:18px;font-weight:700;color:#1a2035;display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+          ${h.subject} — ${topicLabel} ${topicTypeTag}
         </div>
       </div>
+      <div class="doc-badge">ХИЧЭЭЛИЙН ХӨТӨЛБӨР</div>
+    </div>
+    <div class="doc-meta-grid">
+      <div class="doc-meta-item"><span class="doc-meta-label">Хичээл</span><span class="doc-meta-value">${h.subject}</span></div>
+      <div class="doc-meta-item"><span class="doc-meta-label">Анги</span><span class="doc-meta-value">${h.grade}</span></div>
+      <div class="doc-meta-item"><span class="doc-meta-label">Сэдэв</span><span class="doc-meta-value" style="font-size:12px;">${h.topic}</span></div>
+      <div class="doc-meta-item"><span class="doc-meta-label">Хугацаа</span><span class="doc-meta-value">${h.period}</span></div>
+    </div>
+  </div>
 
-      <div class="plan-section">
-        <div class="section-header"><div class="section-num red">1</div><div class="section-title">Суралцахуйн зорилт</div></div>
-        <div class="section-body">
-          <div class="bloom-grid">
-            <div class="bloom-card a"><div class="bloom-label">А — Мэдлэг</div><div class="bloom-name">Мэдэх (Know)</div><div class="bloom-text">${p.objectives.A}</div></div>
-            <div class="bloom-card b"><div class="bloom-label">Б — Чадвар</div><div class="bloom-name">Ойлгох (Understand)</div><div class="bloom-text">${p.objectives.B}</div></div>
-            <div class="bloom-card c"><div class="bloom-label">В — Хэрэглэгч</div><div class="bloom-name">Хэрэглэх (Apply)</div><div class="bloom-text">${p.objectives.C}</div></div>
-          </div>
-        </div>
+  <div class="plan-section">
+    <div class="section-header"><div class="section-num red">1</div><div class="section-title">Суралцахуйн зорилт (Блоомын таксономи)</div></div>
+    <div class="section-body">
+      <div class="bloom-grid">
+        <div class="bloom-card a"><div class="bloom-label">А — Мэдлэг</div><div class="bloom-name">Мэдэх (Know)</div><div class="bloom-text">${p.objectives.A}</div></div>
+        <div class="bloom-card b"><div class="bloom-label">Б — Чадвар</div><div class="bloom-name">Ойлгох / Хэрэглэх</div><div class="bloom-text">${p.objectives.B}</div></div>
+        <div class="bloom-card c"><div class="bloom-label">В — Бүтээлч</div><div class="bloom-name">Шинжлэх / Бүтээх</div><div class="bloom-text">${p.objectives.C}</div></div>
       </div>
+    </div>
+  </div>
 
-      <div class="plan-section">
-        <div class="section-header"><div class="section-num blue">2</div><div class="section-title">Хичээлийн бэлтгэл ба дизайн</div></div>
-        <div class="section-body">
-          <div class="design-grid">
-            <div class="design-item"><div class="design-item-label">Арга зүй</div><div class="design-item-text">${p.design.method}</div></div>
-            <div class="design-item"><div class="design-item-label">Хэрэглэгдэхүүн & Цахим</div><div class="design-item-text">${p.design.tools}</div></div>
-            <div class="design-item"><div class="design-item-label">Ангийн зохион байгуулалт</div><div class="design-item-text">${p.design.engagement}</div></div>
-          </div>
-        </div>
+  <div class="plan-section">
+    <div class="section-header"><div class="section-num blue">2</div><div class="section-title">Хичээлийн бэлтгэл ба дизайн</div></div>
+    <div class="section-body">
+      <div class="design-grid">
+        <div class="design-item"><div class="design-item-label">Арга зүй</div><div class="design-item-text">${p.design.method}</div></div>
+        <div class="design-item"><div class="design-item-label">Хэрэглэгдэхүүн & Цахим</div><div class="design-item-text">${p.design.tools}</div></div>
+        <div class="design-item"><div class="design-item-label">Ангийн зохион байгуулалт</div><div class="design-item-text">${p.design.engagement}</div></div>
       </div>
+    </div>
+  </div>
 
-      <div class="plan-section">
-        <div class="section-header"><div class="section-num green">3</div><div class="section-title">Хичээлийн үйл ажиллагааны урсгал</div></div>
-        <div class="section-body" style="padding:0;">
-          <table class="stages-table">
-            <thead><tr><th style="width:110px;">Үе шат</th><th>Зорилго</th><th>Багшийн үйл ажиллагаа</th><th>Сурагчийн үйл ажиллагаа</th><th style="width:130px;">Үнэлгээ</th></tr></thead>
-            <tbody>
-              ${p.stages.map(s => `<tr>
-                <td><div class="stage-name">${s.name}</div><div class="stage-time">${s.time} мин</div></td>
-                <td>${s.purpose}</td>
-                <td>${s.teacher.replace(/\n/g,'<br>')}</td>
-                <td>${s.student.replace(/\n/g,'<br>')}</td>
-                <td>${s.assess}</td>
-              </tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <div class="plan-section">
+    <div class="section-header"><div class="section-num green">3</div><div class="section-title">Хичээлийн үйл ажиллагааны урсгал</div></div>
+    <div class="section-body" style="padding:0;">
+      <table class="stages-table">
+        <thead><tr>
+          <th style="width:110px;">Үе шат</th>
+          <th style="width:130px;">Зорилго</th>
+          <th>Багшийн үйл ажиллагаа</th>
+          <th>Сурагчийн үйл ажиллагаа</th>
+          <th style="width:130px;">Үнэлгээ</th>
+        </tr></thead>
+        <tbody>
+          ${p.stages.map(s => `<tr>
+            <td><div class="stage-name">${s.name}</div><div class="stage-time">${s.time} мин</div></td>
+            <td>${s.purpose}</td>
+            <td>${s.teacher.replace(/\n/g,'<br>')}</td>
+            <td>${s.student}</td>
+            <td>${s.assess}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-      <div class="plan-section">
-        <div class="section-header"><div class="section-num orange">4</div><div class="section-title">Хичээлээс гадуур үйл ажиллагаа</div></div>
-        <div class="section-body">
-          <div class="diff-grid">
-            <div class="diff-card"><div class="diff-icon">🎯</div><div class="diff-label">Гэрийн даалгавар</div><div class="diff-text">${p.homework}</div></div>
-            <div class="diff-card"><div class="diff-icon">📊</div><div class="diff-label">Ялгавартай хандлага</div><div class="diff-text">
-              <strong style="color:#66bb6a;font-size:11px;">Дэмжлэг хэрэгтэй:</strong><br>${p.diff.support}<br><br>
-              <strong style="color:#ffa726;font-size:11px;">Дэвшилтэт сурагчид:</strong><br>${p.diff.advanced}
-            </div></div>
-          </div>
-        </div>
+  <div class="plan-section">
+    <div class="section-header"><div class="section-num orange">4</div><div class="section-title">Нэмэлт үйл ажиллагаа & Ялгавартай хандлага</div></div>
+    <div class="section-body">
+      <div class="diff-grid">
+        <div class="diff-card"><div class="diff-icon">📝</div><div class="diff-label">Гэрийн даалгавар</div><div class="diff-text">${p.homework}</div></div>
+        <div class="diff-card"><div class="diff-icon">📊</div><div class="diff-label">Ялгавартай хандлага</div><div class="diff-text">
+          <strong style="color:#66bb6a;font-size:11px;">🟢 Дэмжлэг хэрэгтэй:</strong><br>${p.diff.support}<br><br>
+          <strong style="color:#ffa726;font-size:11px;">🟠 Дэвшилтэт:</strong><br>${p.diff.advanced}
+        </div></div>
       </div>
+    </div>
+  </div>
 
-      <div style="text-align:center;padding-top:16px;font-size:11px;color:#8a96b0;">
-        БагшAI — Монгол ЕБС-ийн хичээлийн хөтөлбөр боловсруулагч
-      </div>
-    </div>`;
+  <div style="text-align:center;padding-top:16px;font-size:11px;color:#8a96b0;">
+    БагшAI · Монгол ЕБС-ийн хичээлийн хөтөлбөр боловсруулагч · 1–12-р анги · medle.mn эх сурвалжид суурилсан
+  </div>
+</div>`;
 }
 
+// ================================================================
+// UTILS
+// ================================================================
 function showState(s) {
-  document.getElementById('emptyState').classList.add('hidden');
-  document.getElementById('loadingState').classList.add('hidden');
-  document.getElementById('planOutput').classList.add('hidden');
-  if (s === 'empty') document.getElementById('emptyState').classList.remove('hidden');
+  ['emptyState','loadingState','planOutput'].forEach(id =>
+    document.getElementById(id).classList.add('hidden'));
+  if (s === 'empty')   document.getElementById('emptyState').classList.remove('hidden');
   if (s === 'loading') document.getElementById('loadingState').classList.remove('hidden');
-  if (s === 'output') document.getElementById('planOutput').classList.remove('hidden');
+  if (s === 'output')  document.getElementById('planOutput').classList.remove('hidden');
 }
 
 function copyText() {
   const t = document.getElementById('planContent').innerText;
   navigator.clipboard.writeText(t).then(() => {
-    event.target.textContent = '✅ Хуулагдлаа!';
-    setTimeout(() => event.target.textContent = '📋 Хуулах', 2000);
+    const btn = event.target;
+    btn.textContent = '✅ Хуулагдлаа!';
+    setTimeout(() => btn.textContent = '📋 Хуулах', 2000);
   });
 }
 
 function resetOutput() { showState('empty'); }
+
+// ================================================================
+// INIT
+// ================================================================
+loadCurriculum();
 </script>
 </body>
 </html>
